@@ -388,13 +388,13 @@ class TuneStrategy(object):
             initial_op_tuning_cfg (OrderedDict): key is (op_name, op_type); value is the initialized tuning config.
         """
         if self.cfg.quantization.approach == 'post_training_auto_quant':
-            query_order = ['static', 'dynamic', 'bf16', 'fp32']
+            query_order = ['static', 'dynamic', 'bf16', 'fp16', 'fp32']
         elif self.cfg.quantization.approach == 'post_training_dynamic_quant':
-            query_order = ['dynamic', 'bf16', 'fp32']
+            query_order = ['dynamic', 'bf16', 'fp16', 'fp32']
         elif self.cfg.quantization.approach == 'post_training_static_quant':
-            query_order = ['static', 'bf16', 'fp32']
+            query_order = ['static', 'bf16', 'fp16', 'fp32']
         elif self.cfg.quantization.approach == 'quant_aware_training':
-            query_order = ['static', 'dynamic', 'bf16', 'fp32']
+            query_order = ['static', 'dynamic', 'bf16', 'fp16', 'fp32']
 
         quant_mode_wise_items = OrderedDict()
         pre_items = set()
