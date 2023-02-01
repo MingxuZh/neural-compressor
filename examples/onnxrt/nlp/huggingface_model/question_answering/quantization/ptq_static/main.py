@@ -470,22 +470,20 @@ def main():
         model = model_optimizer.model
 
         from neural_compressor import quantization
-        from neural_compressor.config import PostTrainingQuantConfig, TuningCriterion
+        from neural_compressor.config import PostTrainingQuantConfig
         calib_dataset = SQuADDataset(eval_dataset, model, label_names=["start_positions", "end_positions"])
         fp32_op_names = None
         if model_args.model_name_or_path == 'mrm8488/spanbert-finetuned-squadv1':
             fp32_op_names = ['Gather_94', 'MatMul_660', 'MatMul_754', 'MatMul_848', 'MatMul_1036']
-            config = PostTrainingQuantConfig(approach='static',
-                                            op_name_list={op_name:FP32_CONFIG for op_name in fp32_op_names if fp32_op_names})
         elif model_args.model_name_or_path == 'salti/bert-base-multilingual-cased-finetuned-squad':
             fp32_op_names = ['MatMul_660', 'MatMul_566', 'Unsqueeze_91']
-            config = PostTrainingQuantConfig(approach='static',
-                                            op_name_list={op_name:FP32_CONFIG for op_name in fp32_op_names if fp32_op_names})
-        else:
-            tuning_criterion = TuningCriterion(max_trials=5000)
-            config = PostTrainingQuantConfig(approach='static',
-                                            quant_level=0,
-                                            tuning_criterion=tuning_criterion)
+        elif model_args.model_name_or_path == 'deepset/roberta-large-squad2':
+            fp32_op_names = ['Squeeze_.*?', 'Split_.*?', 'Add_.*?', 'Mul_.*?', 'Gather_.*?', 'Unsqueeze_.*?', 
+                             'Attention_(0|1(|4)|2|3|4|5|8|9)', 'MatMul_(2(290|188|0(86|76))|1(9(84|74|60)|882|678))']
+        elif model_args.model_name_or_path == 'distilbert-base-uncased-distilled-squad':
+            fp32_op_names = ['Squeeze_.*?', 'Unsqueeze_.*?', 'Split_.*?', 'Add_.*?','Gather_.*?', 'MatMul_(448|272|184)']
+        config = PostTrainingQuantConfig(approach='static',
+                                         op_name_list={op_name:FP32_CONFIG for op_name in fp32_op_names} if fp32_op_names else {})
         q_model = quantization.fit(model, 
                                    config,
                                    eval_func=eval_func,

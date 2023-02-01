@@ -415,15 +415,18 @@ if __name__ == "__main__":
         from neural_compressor import quantization
         from neural_compressor.config import PostTrainingQuantConfig, TuningCriterion
         if args.model_name_or_path == 'Intel/xlnet-base-cased-mrpc':
-                fp32_op_names = ['/transformer/layer.[0,8,9]/ff/layer_[1,2]/MatMul', '/transformer/layer.10/ff/layer_1/MatMul', 
-                                 '/transformer/layer.5/ff/layer_1/MatMul', '/transformer/word_embedding/Gather']
+                fp32_op_names = ['/transformer/layer.(0|8|9)/ff/layer_(1|2)/MatMul', '/transformer/layer.(5|10)/ff/layer_1/MatMul',
+                                 '/transformer/word_embedding/Gather']
                 config = PostTrainingQuantConfig(approach='static',
                                                  op_name_list={op_name:FP32_CONFIG for op_name in fp32_op_names if fp32_op_names})
-        else:
-            tuning_criterion = TuningCriterion(max_trials=5000)
+        if args.model_name_or_path == 'Intel/bart-large-mrpc':
+            fp32_op_names = ['Concat_.*?','Squeeze_.*?','Unsqueeze_.*?', 'Transpose_.*?', 
+                             'MatMul_(2(1(41|55|65|8(5|9))|287)|3(506|7(26|46)|9(46|77))|4(0(30|44)|826))']
             config = PostTrainingQuantConfig(approach='static',
-                                            quant_level=0,
-                                            tuning_criterion=tuning_criterion)
+                                             op_name_list={op_name:FP32_CONFIG for op_name in fp32_op_names if fp32_op_names})
+        else:
+            config = PostTrainingQuantConfig(approach='static',
+                                             quant_level=0)
         q_model = quantization.fit(model, 
                                    config,
                                    eval_func=eval_func,

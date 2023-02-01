@@ -855,6 +855,34 @@
       "input_model": "/tf_dataset2/models/onnx/hf_roberta-large_static/roberta-large-squad2.onnx",
       "main_script": "main.py",
       "batch_size": 1
+    },
+    "hf_gpt2_dynamic": {
+      "model_src_dir": "nlp/huggingface_model/language_modeling/quantization/ptq_dynamic",
+      "dataset_location": "/tf_dataset2/datasets/wikitext/wikitext-2-raw/wiki.valid.raw",
+      "input_model": "/tf_dataset2/models/onnx/hf_gpt2/gpt2-wikitext.onnx",
+      "main_script": "main.py",
+      "batch_size": 1
+    },
+    "hf_gpt2": {
+      "model_src_dir": "nlp/huggingface_model/language_modeling/quantization/ptq_static",
+      "dataset_location": "/tf_dataset2/datasets/wikitext/wikitext-2-raw/wiki.valid.raw",
+      "input_model": "/tf_dataset2/models/onnx/hf_gpt2/gpt2-wikitext.onnx",
+      "main_script": "main.py",
+      "batch_size": 1
+    },
+    "hf_distilgpt2_dynamic": {
+      "model_src_dir": "nlp/huggingface_model/language_modeling/quantization/ptq_dynamic",
+      "dataset_location": "/tf_dataset2/datasets/wikitext/wikitext-2-raw/wiki.valid.raw",
+      "input_model": "/tf_dataset2/models/onnx/hf_gpt2/gpt2-wikitext.onnx",
+      "main_script": "main.py",
+      "batch_size": 1
+    },
+    "hf_distilgpt2": {
+      "model_src_dir": "nlp/huggingface_model/language_modeling/quantization/ptq_static",
+      "dataset_location": "/tf_dataset2/datasets/wikitext/wikitext-2-raw/wiki.valid.raw",
+      "input_model": "/tf_dataset2/models/onnx/hf_distilgpt2_dynamic/distilgpt2-wikitext2.onnx",
+      "main_script": "main.py",
+      "batch_size": 1
     }
   }
 }
