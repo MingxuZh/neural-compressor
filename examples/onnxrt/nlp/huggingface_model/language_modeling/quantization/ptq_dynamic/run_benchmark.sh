@@ -59,7 +59,7 @@ function run_benchmark {
         model_name_or_path="Intel/distilgpt2-wikitext2"
     fi
 
-    python gpt2.py --model_path ${input_model} \
+    python main.py --model_path ${input_model} \
                         --data_path ${dataset_location} \
                         --model_name_or_path ${model_name_or_path} \
                         --eval_batch_size ${batch_size} \
