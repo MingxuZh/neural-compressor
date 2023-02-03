@@ -149,15 +149,6 @@ def float_to_float16(tensor):
     tensor[(tensor < -max_val) & (tensor > float('-inf'))] = -max_val
     return np.float16(tensor)
 
-def float_to_bfloat16(tensor):
-    min_val = 9.2e-41
-    max_val = 3.38953139e38
-    tensor[(tensor > max_val) & (tensor < float('inf'))] = max_val
-    tensor[(tensor < min_val) & (tensor > 0)] = min_val
-    tensor[(tensor > -min_val) & (tensor < 0)] = -min_val
-    tensor[(tensor < -max_val) & (tensor > float('-inf'))] = -max_val
-    return tensor
-
 def cast_tensor(tensor, dtype): # pragma: no cover
     """Convert tensor float to target dtype.
 
@@ -172,10 +163,8 @@ def cast_tensor(tensor, dtype): # pragma: no cover
         val = numpy_helper.to_array(tensor).copy()
         if dtype == 'fp16':
             new_val = float_to_float16(val)
-        elif dtype == 'bf16':
-            new_val = float_to_bfloat16(val)
         else:
-            raise ValueError('Expect fp16 or bf16 but get {}.'.format(dtype))
+            raise ValueError('Expect fp16 but get {}.'.format(dtype))
         tensor.float_data[:] = []
         tensor.int32_data[:] = []
         tensor.raw_data = new_val.tostring()
